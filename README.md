@@ -17,19 +17,19 @@ An efficient class library for extracting text from HTML.
 
 1. 安装包文件
   ```shell
-  composer require "mylukin/textractor:dev-master"
+  composer require "shiba/textractor:dev-master"
   ```
 
 2. 添加 `ServiceProvider` 到您项目 `config/app.php` 中的 `providers` 部分:
 
   ```php
-  Lukin\Textractor\TextractorServiceProvider::class,
+  shiba\Textractor\TextractorServiceProvider::class,
   ```
 
 3. 创建配置文件:
 
   ```shell
-  php artisan vendor:publish --provider="Lukin\Textractor\TextractorServiceProvider"
+  php artisan vendor:publish --provider="shiba\Textractor\TextractorServiceProvider"
   ```
 
   然后请修改 `config/textractor.php` 中对应的项即可。
