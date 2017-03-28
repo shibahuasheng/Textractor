@@ -89,11 +89,7 @@ class Textractor
         $client = new Client($defaults);
 
         try {
-            $this->response = $client->get($url, [
-                'on_stats' => function (TransferStats $stats) use (&$url) {
-                    $url = $stats->getEffectiveUri();
-                }
-            ]);
+            $this->response = $client->get($url);
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
                 $this->response = $e->getResponse();
@@ -125,10 +121,10 @@ class Textractor
     public function parse($content = null)
     {
         // 转换编码
-        if (!$content && $this->response instanceof Response) {
+        if (!$content && $this->response) {
             $content = (string)$this->response->getBody();
             $charset = null;
-            $content_type = $this->response->getHeaderLine('Content-Type');
+            $content_type = $this->response->getHeader('Content-Type');
             if (preg_match('@charset=([^\s\,\;]+)@i', $content_type, $matches)) {
                 $charset = $matches[1];
             }
