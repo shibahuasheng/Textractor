@@ -14,7 +14,7 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\TransferStats;
-
+use phpQuery;
 /**
  * Class Textractor
  * @package Lukin\Textractor
@@ -31,6 +31,8 @@ class Textractor
     private $end_limit_char_count = 20;
     // 文章追加模式
     private $append_mode = false;
+
+    private $css_config = null;
 
     /**
      * @var Response
@@ -60,6 +62,7 @@ class Textractor
             $this->head_empty_lines = isset($config['head_empty_lines']) ? $config['head_empty_lines'] : $this->head_empty_lines;
             $this->end_limit_char_count = isset($config['end_limit_char_count']) ? $config['end_limit_char_count'] : $this->end_limit_char_count;
             $this->append_mode = isset($config['append_mode']) ? $config['append_mode'] : $this->append_mode;
+            $this->css_config = isset($config['css_config']) ? $config['css_config'] : $this->css_config;
         }
     }
 
@@ -275,6 +278,24 @@ class Textractor
         ];
     }
 
+    //自定义抓取数据
+    private function cumtomer_parse_source(){
+        \Log::error('1111');
+        $text = '';
+        $html = '';
+        if(!empty($this->css_config)){
+            $doc = phpQuery::newDocument($this->html_source);
+            $doc = $doc->find($this->css_config);
+            $text = $doc->text();
+            $html = $doc->html();
+        }
+        \Log::error($this->html_source);
+        return [
+            'text' =>$text,
+            'html' =>$html
+        ];
+    }
+
     /**
      * 获取文本
      *
@@ -282,6 +303,9 @@ class Textractor
      */
     public function getText()
     {
+        if(!empty($this->css_config)){
+            return $this->cumtomer_parse_source()['text'];
+        }
         return $this->parse_source()['text'];
     }
 
@@ -292,6 +316,9 @@ class Textractor
      */
     public function getHTML()
     {
+        if(!empty($this->css_config)){
+            return $this->cumtomer_parse_source()['html'];
+        }
         return $this->parse_source()['html'];
     }
 
