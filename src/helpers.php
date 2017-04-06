@@ -119,7 +119,7 @@ if (!function_exists('close_tags')) {
      * @param string $html
      * @return mixed|string
      */
-    function close_tags($html)
+    function close_tags($phtml)
     {
         $param = array(
          'html' => $phtml, //必填
