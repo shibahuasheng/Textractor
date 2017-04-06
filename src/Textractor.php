@@ -280,16 +280,18 @@ class Textractor
 
     //自定义抓取数据
     private function cumtomer_parse_source(){
-        \Log::error('1111');
         $text = '';
         $html = '';
         if(!empty($this->css_config)){
-            $doc = phpQuery::newDocument($this->html_source);
-            $doc = $doc->find($this->css_config);
-            $text = $doc->text();
-            $html = $doc->html();
+            if($this->html_source){
+                $doc = phpQuery::newDocument($this->html_source);
+                if($doc){
+                    $doc = $doc->find($this->css_config);
+                    $text = $doc->text();
+                    $html = $doc->html();
+                }
+            }
         }
-        \Log::error($this->html_source);
         return [
             'text' =>$text,
             'html' =>$html
