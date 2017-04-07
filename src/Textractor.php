@@ -34,6 +34,10 @@ class Textractor
 
     private $css_config = null;
 
+    private $title_css = null;
+
+    private $filter_css = null;
+
     /**
      * @var Response
      */
@@ -63,6 +67,8 @@ class Textractor
             $this->end_limit_char_count = isset($config['end_limit_char_count']) ? $config['end_limit_char_count'] : $this->end_limit_char_count;
             $this->append_mode = isset($config['append_mode']) ? $config['append_mode'] : $this->append_mode;
             $this->css_config = isset($config['css_config']) ? $config['css_config'] : $this->css_config;
+            $this->title_css = isset($config['title_css']) ? $config['title_css'] : $this->title_css;
+            $this->filter_css = isset($config['filter_css']) ? $config['filter_css'] : $this->filter_css;
         }
     }
 
@@ -286,6 +292,12 @@ class Textractor
             if($this->html_source){
                 $doc = phpQuery::newDocument($this->html_source);
                 if($doc){
+                    if($this->filter_css){
+                        $filter = json_decode($this->filter_css,true);
+                        foreach ($filter as $item){
+                            $doc->find($item)->parent()->remove();
+                        }
+                    }
                     $doc = $doc->find($this->css_config);
                     $text = $doc->text();
                     $html = $doc->html();
