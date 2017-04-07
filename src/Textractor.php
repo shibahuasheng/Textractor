@@ -292,10 +292,11 @@ class Textractor
             if($this->html_source){
                 $doc = phpQuery::newDocument($this->html_source);
                 if($doc){
+                    \Log::error($doc->html());
                     if($this->filter_css){
                         $filter = json_decode($this->filter_css,true);
                         foreach ($filter as $item){
-                            $doc->find($item)->parent()->remove();
+                            $doc->find($item)->remove();
                         }
                     }
                     $doc = $doc->find($this->css_config);
