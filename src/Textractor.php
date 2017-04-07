@@ -390,10 +390,27 @@ class Textractor
      */
     public function getTitle()
     {
+        if($this->title_css){
+            $title = $this->getCustomerTitle();
+            if(!empty($title)){
+                return $title;
+            }
+        }
         $html_source = clear_space($this->html_source);
         $title = mid($html_source, '@<h1[^>]*>@i', '@</h1>@i');
         if (!$title) {
             $title = mid($html_source, '@<title[^>]*>@i', '@</title>@i');
+        }
+        return $title;
+    }
+
+    private function getCustomerTitle(){
+        $title = '';
+        if(!empty($this->title_css)){
+            if($this->html_source){
+                $doc = phpQuery::newDocument($this->html_source);
+                return trim($doc->find($this->title_css)->text());
+            }
         }
         return $title;
     }
