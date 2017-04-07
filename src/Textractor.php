@@ -132,14 +132,18 @@ class Textractor
         // 转换编码
         if (!$content && $this->response) {
             $content = (string)$this->response->getBody();
-            $charset = null;
+            /*$charset = null;
+
             $content_type = $this->response->getHeader('Content-Type');
             if (preg_match('@charset=([^\s\,\;]+)@i', $content_type, $matches)) {
+                \Log::error(1);
                 $charset = $matches[1];
             }
             if (!$charset && preg_match('@charset=["\']?([^"\']+)@i', $content, $matches)) {
+                \Log::error(2);
                 $charset = $matches[1];
-            }
+            }*/
+            $charset=mb_detect_encoding($content, array('UTF-8', 'GBK'));
             // 编码不同，需要转换
             $to = 'UTF-8';
             $from = strtoupper($charset) == 'UTF8' ? 'UTF-8' : $charset;
@@ -292,7 +296,6 @@ class Textractor
             if($this->html_source){
                 $doc = phpQuery::newDocument($this->html_source);
                 if($doc){
-                    \Log::error($doc->html());
                     if($this->filter_css){
                         $filter = json_decode($this->filter_css,true);
                         foreach ($filter as $item){
